@@ -1,0 +1,51 @@
+# =====================================================================
+#  Practica 4 - Peticiones de prueba
+# =====================================================================
+#  Se ejecutan con la extension "REST Client" de VS Code:
+#  aparece un enlace "Send Request" arriba de cada bloque.
+#
+#  Antes de correrlas:  npm run dev
+# =====================================================================
+
+### 1. Listar prestamos del libro (vacio al inicio)  ->  200  []
+GET http://localhost:3000/api/prestamos?libroId=LIB-0417
+
+### 2. Crear un prestamo  ->  201 Created + cabecera Location
+POST http://localhost:3000/api/prestamos
+Content-Type: application/json
+
+{
+  "libroId": "LIB-0417",
+  "socioId": "S-001",
+  "ejemplares": [14, 15]
+}
+
+### 3. El mismo ejemplar otra vez  ->  409 Conflict
+#     El JSON viene perfecto: lo que choca es el estado del sistema.
+POST http://localhost:3000/api/prestamos
+Content-Type: application/json
+
+{
+  "libroId": "LIB-0417",
+  "socioId": "S-002",
+  "ejemplares": [15, 16]
+}
+
+### 4. JSON que no cumple el contrato  ->  400 con la lista de detalles
+#     Aqui se ve que la validacion SI existe en tiempo de ejecucion.
+POST http://localhost:3000/api/prestamos
+Content-Type: application/json
+
+{
+  "libroId": "",
+  "ejemplares": "muchos"
+}
+
+### 5. Falta el parametro obligatorio  ->  400
+GET http://localhost:3000/api/prestamos
+
+### 6. Ruta que no existe  ->  404
+DELETE http://localhost:3000/api/otra-cosa
+
+### 7. El cliente HTML (abrir en el navegador)
+GET http://localhost:3000/
